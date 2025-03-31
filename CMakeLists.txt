@@ -39,6 +39,16 @@ if(PNGCHECK_USE_ZLIB)
     target_compile_definitions(pngcheck PRIVATE USE_ZLIB)
 endif()
 
+# Compiler-specific options
+if(MSVC)
+    # Auto-expand the wildcard arguments
+    # http://msdn.microsoft.com/en-us/library/8bch7bkk.aspx
+    set(CMAKE_EXE_LINKER_FLAGS "setargv.obj ${CMAKE_EXE_LINKER_FLAGS}")
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    # Enable commonly-used warning options by default
+    set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wundef ${CMAKE_CXX_FLAGS}")
+endif()
+
 # Installation rules
 include(GNUInstallDirs)
 install(TARGETS pngcheck
